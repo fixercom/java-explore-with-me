@@ -1,15 +1,51 @@
 version: '3.1'
 services:
   stats-server:
+    build: stats-service/server
+    image: stats-service-image
+    container_name: stats-service-container
     ports:
-      - "9090:9090"
+      - "9090:9444"
+    depends_on:
+      - stats-db
+    environment:
+      - SERVER_PORT=9444
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/ewm_stats
+      - SPRING_DATASOURCE_USERNAME=DB_stats_admin
+      - SPRING_DATASOURCE_PASSWORD=sdf51sfs15sf999r
 
   stats-db:
     image: postgres:14-alpine
+    container_name: stats-postgres-container
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=ewm_stats
+      - POSTGRES_USER=DB_stats_admin
+      - POSTGRES_PASSWORD=sdf51sfs15sf999r
 
   ewm-service:
+    build: main-service
+    image: main-service-image
+    container_name: main-service-container
     ports:
-      - "8080:8080"
+      - "8080:8739"
+    depends_on:
+      - ewm-db
+    environment:
+      - SERVER_PORT=8739
+      - SPRING_DATASOURCE_DRIVERCLASSNAME=org.postgresql.Driver
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm
+      - SPRING_DATASOURCE_USERNAME=DB_ewm_admin
+      - SPRING_DATASOURCE_PASSWORD=sdf4adf155a418fa
 
   ewm-db:
     image: postgres:14-alpine
+    container_name: ewm-postgres-container
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=ewm
+      - POSTGRES_USER=DB_ewm_admin
+      - POSTGRES_PASSWORD=sdf4adf155a418fa
