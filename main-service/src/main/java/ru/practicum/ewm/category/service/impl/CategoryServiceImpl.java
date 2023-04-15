@@ -10,7 +10,7 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.repository.CategoryRepository;
 import ru.practicum.ewm.category.service.CategoryService;
 import ru.practicum.ewm.category.updater.CategoryUpdater;
-import ru.practicum.ewm.exception.CategoryNotFoundException;
+import ru.practicum.ewm.exception.not_found.CategoryNotFoundException;
 
 import java.util.List;
 

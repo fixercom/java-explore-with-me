@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.ewm.exception.UserNotFoundException;
+import ru.practicum.ewm.exception.not_found.UserNotFoundException;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 import ru.practicum.ewm.user.service.UserService;
@@ -26,8 +26,15 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User createUser(User user) {
         User savedUser = userRepository.save(user);
-        log.debug("User saved in the database, generated id={}", user.getId());
+        log.debug("User saved in the database, generated id={}", savedUser.getId());
         return savedUser;
+    }
+
+    @Override
+    public User getUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        log.debug("User with id={} was obtained from the database: {}", user.getId(), user);
+        return user;
     }
 
     @Override

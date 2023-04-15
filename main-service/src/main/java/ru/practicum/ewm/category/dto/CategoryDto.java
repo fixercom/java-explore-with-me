@@ -14,7 +14,7 @@ import javax.validation.constraints.Null;
 public class CategoryDto {
 
     @Null(message = "id must be null")
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 
 }

@@ -14,6 +14,6 @@ import javax.validation.constraints.NotBlank;
 public class NewCategoryDto {
 
     @NotBlank(message = "must not be blank")
-    String name;
+    private String name;
 
 }

@@ -16,10 +16,11 @@ import javax.validation.constraints.Null;
 public class UserDto {
 
     @Email
-    String email;
-    @Null(message = "id must be null")
-    Long id;
     @NotBlank(message = "must not be blank")
-    String name;
+    private String email;
+    @Null(message = "id must be null")
+    private Long id;
+    @NotBlank(message = "must not be blank")
+    private String name;
 
 }
