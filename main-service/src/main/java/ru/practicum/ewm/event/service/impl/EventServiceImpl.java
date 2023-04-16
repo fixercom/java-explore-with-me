@@ -3,11 +3,11 @@ package ru.practicum.ewm.event.service.impl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.dto.AdminEventFilter;
@@ -29,10 +29,10 @@ import ru.practicum.ewm.exception.not_found.EventNotFoundException;
 import ru.practicum.ewm.util.DateUtils;
 import ru.practicum.ewm.util.QPredicates;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 import static ru.practicum.ewm.event.model.QEvent.event;
+
 
 @Service
 @RequiredArgsConstructor
@@ -42,11 +42,11 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventUpdater eventUpdater;
-    private final EntityManager entityManager;
 
     @Override
     @Transactional
     public Event createEvent(Event event) {
+        throwExceptionIfDateIsIncorrect(event, false);
         event.setState(EventState.PENDING);
         event.setCreatedOn(DateUtils.now());
         event.setConfirmedRequests(0);
@@ -84,6 +84,7 @@ public class EventServiceImpl implements EventService {
         Event targetEvent = getEventByIdAndInitiatorId(eventId, userId);
         throwExceptionIfEventCannotBeUpdated(targetEvent);
         eventUpdater.update(eventPatch, targetEvent);
+        throwExceptionIfDateIsIncorrect(targetEvent, false);
         changeEventStateIfNecessary(targetEvent, userActionState);
         eventRepository.save(targetEvent);
         log.debug("Event with id={} updated in the database: {}", eventId, targetEvent);
@@ -95,7 +96,7 @@ public class EventServiceImpl implements EventService {
     public Event updateEvent(Long eventId, Event eventPatch, AdminActionState adminActionState) {
         Event targetEvent = getEventById(eventId);
         eventUpdater.update(eventPatch, targetEvent);
-        throwExceptionIfDateIsIncorrect(targetEvent);
+        throwExceptionIfDateIsIncorrect(targetEvent, true);
         changeEventStateIfNecessary(targetEvent, adminActionState);
         eventRepository.save(targetEvent);
         log.debug("Event with id={} updated in the database: {}", eventId, targetEvent);
@@ -110,45 +111,29 @@ public class EventServiceImpl implements EventService {
                 .add(adminEventFilter.getCategories(), event.category.id::in)
                 .add(adminEventFilter.getDateRange(), dr -> generateDateRangeExpression(dr, false))
                 .buildAnd();
-        List<Event> events = new JPAQueryFactory(entityManager)
-                .selectFrom(event)
-                .join(event.category)
-                .fetchJoin()
-                .join(event.initiator)
-                .fetchJoin()
-                .where(predicate)
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
+        List<Event> events = eventRepository.findAll(predicate, pageable).getContent();
         log.debug("Events was obtained from the database: {}", events);
         return events;
     }
 
     @Override
-    public List<Event> searchEvents(PublicEventFilter publicEventFilter, Pageable pageable) {
+    public List<Event> searchEvents(PublicEventFilter publicEventFilter) {
         ifTextParamIsBlankThenChangeToNull(publicEventFilter);
-        Predicate findByTextPredicate = QPredicates.builder()
+        Pageable page = getPageFromPublicEventFilter(publicEventFilter);
+        Predicate firstPart = QPredicates.builder()
                 .add(publicEventFilter.getText(), event.annotation::containsIgnoreCase)
                 .add(publicEventFilter.getText(), event.description::containsIgnoreCase)
                 .buildOr();
-        Predicate secondPartPredicate = QPredicates.builder()
+        Predicate secondPart = QPredicates.builder()
                 .add(publicEventFilter.getCategories(), event.category.id::in)
                 .add(publicEventFilter.getPaid(), event.paid::eq)
                 .add(publicEventFilter.getDateRange(), dr -> generateDateRangeExpression(dr, true))
                 .add(publicEventFilter.getOnlyAvailable(), this::generateAvailableExpression)
                 .buildAnd();
-        EventSortType sortType = publicEventFilter.getEventSortType();
-        List<Event> events = new JPAQueryFactory(entityManager)
-                .selectFrom(event)
-                .join(event.category)
-                .fetchJoin()
-                .join(event.initiator)
-                .fetchJoin()
-                .where(ExpressionUtils.and(findByTextPredicate, secondPartPredicate))
-                .orderBy(sortType == EventSortType.EVENT_DATE ? event.eventDate.asc() : event.paid.asc())
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetch();
+        Predicate predicate = ExpressionUtils.allOf(firstPart, secondPart);
+        List<Event> events = (predicate != null) ?
+                eventRepository.findAll(predicate, page).getContent() :
+                eventRepository.findAll(page).getContent();
         log.debug("Events was obtained from the database: {}", events);
         return events;
     }
@@ -158,6 +143,29 @@ public class EventServiceImpl implements EventService {
         Event event = getEventById(id);
         throwExceptionIfEventNotPublished(event);
         return event;
+    }
+
+    @Override
+    public List<Event> getAllEventsByIdIn(List<Long> eventIds) {
+        List<Event> events = eventRepository.findAllByIdIn(eventIds);
+        log.debug("Events with ids={} were obtained from the database: {}", eventIds, events);
+        return events;
+    }
+
+    private Pageable getPageFromPublicEventFilter(PublicEventFilter publicEventFilter) {
+        Integer from = publicEventFilter.getFrom();
+        Integer size = publicEventFilter.getSize();
+        EventSortType sortType = publicEventFilter.getEventSortType();
+        Pageable page;
+        Sort sort;
+        if (sortType != null) {
+            sort = (sortType == EventSortType.EVENT_DATE) ?
+                    Sort.by("eventDate") : Sort.by("state");
+            page = PageRequest.of(from / size, size, sort);
+        } else {
+            page = PageRequest.of(from / size, size);
+        }
+        return page;
     }
 
     private void throwEventNotPossibleCancelOrPublishException(Event event, AdminActionState adminActionState) {
@@ -181,14 +189,21 @@ public class EventServiceImpl implements EventService {
     }
 
     private void ifTextParamIsBlankThenChangeToNull(PublicEventFilter publicEventFilter) {
-        if (publicEventFilter.getText().isBlank()) {
+        if (publicEventFilter.getText() != null && publicEventFilter.getText().isBlank()) {
             publicEventFilter.setText(null);
         }
     }
 
-    private void throwExceptionIfDateIsIncorrect(Event targetEvent) {
-        if (targetEvent.getEventDate().isBefore(DateUtils.now().plusHours(1))) {
-            throw new EventDateException();
+    private void throwExceptionIfDateIsIncorrect(Event targetEvent, Boolean isAdmin) {
+        if (isAdmin) {
+            if (targetEvent.getEventDate().isBefore(DateUtils.now().plusHours(1))) {
+                throw new EventDateException("The start date of the event to be modified " +
+                        "must be no earlier than one hour from the date of publication");
+            }
+        } else {
+            if (targetEvent.getEventDate().isBefore(DateUtils.now().plusHours(2))) {
+                throw new EventDateException("The date cannot be earlier than two hours from the current moment");
+            }
         }
     }
 

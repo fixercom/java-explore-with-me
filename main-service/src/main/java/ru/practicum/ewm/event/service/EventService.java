@@ -25,8 +25,10 @@ public interface EventService {
 
     List<Event> searchEvents(AdminEventFilter adminEventFilter, Pageable pageable);
 
-    List<Event> searchEvents(PublicEventFilter publicEventFilter, Pageable pageable);
+    List<Event> searchEvents(PublicEventFilter publicEventFilter);
 
     Event getEventByIdPublic(Long id);
+
+    List<Event> getAllEventsByIdIn(List<Long> eventIds);
 
 }

@@ -20,5 +20,7 @@ public class PublicEventFilter {
     private DateRange dateRange;
     private Boolean onlyAvailable;
     private EventSortType eventSortType;
+    private Integer from;
+    private Integer size;
 
 }

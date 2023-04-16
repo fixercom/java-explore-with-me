@@ -10,8 +10,10 @@ import java.time.LocalDateTime;
 
 public class AtLeastTwoHoursAfterCurrentTimeValidator implements
         ConstraintValidator<AtLeastTwoHoursAfterCurrentTime, LocalDateTime> {
+
     @Override
     public boolean isValid(LocalDateTime value, ConstraintValidatorContext context) {
         return value.isAfter(DateUtils.now().plusHours(2));
     }
+
 }

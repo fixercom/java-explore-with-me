@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
+import ru.practicum.ewm.exception.NotPossibleCancelRequestException;
 import ru.practicum.ewm.exception.NotPossibleCreateRequestException;
 import ru.practicum.ewm.exception.not_found.EventNotFoundException;
 import ru.practicum.ewm.exception.not_found.RequestNotFoundException;
@@ -69,9 +70,9 @@ public class RequestServiceImpl implements RequestService {
         throwExceptionIfUserIsNotInitiator(userId, event);
         Integer numberOfConfirmedRequests = event.getConfirmedRequests();
         Integer participantLimit = event.getParticipantLimit();
-        List<ParticipationRequest> requests = requestRepository
-                .findAllByEventIdAndStatusAndIdIn(event.getId(), RequestStatus.PENDING, requestIds);
+        List<ParticipationRequest> requests = requestRepository.findAllByEventIdAndIdIn(event.getId(), requestIds);
         for (ParticipationRequest request : requests) {
+            throwExceptionIfRequestStatusIsNotPending(request);
             if (numberOfConfirmedRequests < participantLimit) {
                 request.setStatus(status);
                 numberOfConfirmedRequests++;
@@ -96,6 +97,7 @@ public class RequestServiceImpl implements RequestService {
     public ParticipationRequest cancelUserRequest(Long userId, Long requestId) {
         ParticipationRequest request = requestRepository.findByIdAndRequesterId(requestId, userId)
                 .orElseThrow(() -> new RequestNotFoundException(requestId));
+        throwExceptionIfRequestStatusIsNotPending(request);
         request.setStatus(RequestStatus.CANCELED);
         requestRepository.save(request);
         log.debug("Request with id={} was updated in the database: {}", requestId, request);
@@ -118,6 +120,12 @@ public class RequestServiceImpl implements RequestService {
     private void throwExceptionIfRequestLimitIsReached(Event event) {
         if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
             throw new NotPossibleCreateRequestException("The limit of event participants has been reached");
+        }
+    }
+
+    private void throwExceptionIfRequestStatusIsNotPending(ParticipationRequest request) {
+        if (request.getStatus() != RequestStatus.PENDING) {
+            throw new NotPossibleCancelRequestException("Not possible update request because status is not pending");
         }
     }
 

@@ -1,7 +1,7 @@
 package ru.practicum.ewm.validation.annotation;
 
 
-import ru.practicum.ewm.validation.validator.AtLeastTwoHoursAfterCurrentTimeValidator;
+import ru.practicum.ewm.validation.validator.NotBlankButMayBeNullValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = AtLeastTwoHoursAfterCurrentTimeValidator.class)
-public @interface AtLeastTwoHoursAfterCurrentTime {
+@Constraint(validatedBy = NotBlankButMayBeNullValidator.class)
+public @interface NotBlankButMayBeNull {
 
-    String message() default "{AtLeastTwoHoursAfterCurrentTime.invalid}";
+    String message() default "{NotBlankButMayBeNull.invalid}";
 
     Class<?>[] groups() default {};
 

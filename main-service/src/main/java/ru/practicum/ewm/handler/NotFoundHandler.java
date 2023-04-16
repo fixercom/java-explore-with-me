@@ -20,7 +20,8 @@ public class NotFoundHandler {
     @ExceptionHandler({UserNotFoundException.class,
             CategoryNotFoundException.class,
             EventNotFoundException.class,
-            RequestNotFoundException.class})
+            RequestNotFoundException.class,
+            CompilationNotFoundException.class})
     public ApiError handleNotFoundException(NotFoundException exception) {
         String message = exception.getMessage();
         log.warn("{}: {}", exception.getClass().getSimpleName(), message);

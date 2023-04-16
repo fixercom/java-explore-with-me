@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.validation.annotation.AtLeastTwoHoursAfterCurrentTime;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,7 +26,6 @@ public class NewEventDto {
     @NotBlank(message = "description must not be blank")
     private String description;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @AtLeastTwoHoursAfterCurrentTime(message = "the date cannot be earlier than two hours from the current moment")
     private LocalDateTime eventDate;
     @NotNull(message = "location must not be null")
     private Location location;

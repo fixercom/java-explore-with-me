@@ -3,12 +3,15 @@ package ru.practicum.ewm.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.ewm.exception.*;
 import ru.practicum.ewm.handler.error.ApiError;
 import ru.practicum.ewm.util.DateUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestControllerAdvice
@@ -82,6 +85,32 @@ public class ConflictHandler {
 
     @ExceptionHandler(NotPossibleCreateRequestException.class)
     public ApiError handleNotPossibleCreateRequestException(NotPossibleCreateRequestException exception) {
+        String message = exception.getMessage();
+        log.warn("{}: {}", exception.getClass().getSimpleName(), message);
+        return ApiError.builder()
+                .status(RESPONSE_STATUS_NAME_FORBIDDEN)
+                .reason(REASON)
+                .message(message)
+                .timestamp(DateUtils.now())
+                .build();
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ApiError handleNotPossibleCreateRequestException(HttpMessageNotReadableException exception,
+                                                            HttpServletRequest request) {
+        log.debug("{} request {} received", request.getMethod(), request.getRequestURI());
+        String message = exception.getMessage();
+        log.warn("{}: {}", exception.getClass().getSimpleName(), message);
+        return ApiError.builder()
+                .status(RESPONSE_STATUS_NAME_FORBIDDEN)
+                .reason(REASON)
+                .message(message)
+                .timestamp(DateUtils.now())
+                .build();
+    }
+
+    @ExceptionHandler(NotPossibleCancelRequestException.class)
+    public ApiError handleNotPossibleCreateRequestException(NotPossibleCancelRequestException exception) {
         String message = exception.getMessage();
         log.warn("{}: {}", exception.getClass().getSimpleName(), message);
         return ApiError.builder()

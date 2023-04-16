@@ -2,8 +2,6 @@ package ru.practicum.ewm.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.event.dto.DateRange;
 import ru.practicum.ewm.event.dto.EventFullDto;
@@ -52,9 +50,10 @@ public class EventPublicController {
                 .dateRange(new DateRange(rangeStart, rangeEnd))
                 .onlyAvailable(onlyAvailable)
                 .eventSortType(EventSortType.fromName(sort))
+                .from(from)
+                .size(size)
                 .build();
-        Pageable page = PageRequest.of(from / size, size);
-        return eventMapper.toEventShortDtoList(eventService.searchEvents(publicEventFilter, page));
+        return eventMapper.toEventShortDtoList(eventService.searchEvents(publicEventFilter));
     }
 
     @GetMapping("/{id}")
