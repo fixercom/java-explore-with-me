@@ -83,8 +83,8 @@ public class ConflictHandler {
                 .build();
     }
 
-    @ExceptionHandler(NotPossibleCreateRequestException.class)
-    public ApiError handleNotPossibleCreateRequestException(NotPossibleCreateRequestException exception) {
+    @ExceptionHandler(RequestNotPossibleCreateException.class)
+    public ApiError handleNotPossibleCreateRequestException(RequestNotPossibleCreateException exception) {
         String message = exception.getMessage();
         log.warn("{}: {}", exception.getClass().getSimpleName(), message);
         return ApiError.builder()
@@ -109,8 +109,8 @@ public class ConflictHandler {
                 .build();
     }
 
-    @ExceptionHandler(NotPossibleCancelRequestException.class)
-    public ApiError handleNotPossibleCreateRequestException(NotPossibleCancelRequestException exception) {
+    @ExceptionHandler(RequestNotPossibleCancelException.class)
+    public ApiError handleNotPossibleCreateRequestException(RequestNotPossibleCancelException exception) {
         String message = exception.getMessage();
         log.warn("{}: {}", exception.getClass().getSimpleName(), message);
         return ApiError.builder()

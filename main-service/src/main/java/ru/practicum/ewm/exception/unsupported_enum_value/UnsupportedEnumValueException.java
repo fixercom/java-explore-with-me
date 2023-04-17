@@ -1,4 +1,4 @@
-package ru.practicum.ewm.exception.unsupported_enum;
+package ru.practicum.ewm.exception.unsupported_enum_value;
 
 public abstract class UnsupportedEnumValueException extends RuntimeException {
 

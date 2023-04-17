@@ -1,6 +1,6 @@
 package ru.practicum.ewm.event.enums;
 
-import ru.practicum.ewm.exception.unsupported_enum.UnsupportedEventSortTypeException;
+import ru.practicum.ewm.exception.unsupported_enum_value.UnsupportedEventSortTypeException;
 
 public enum EventSortType   {
 

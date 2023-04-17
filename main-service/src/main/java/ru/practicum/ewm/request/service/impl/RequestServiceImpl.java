@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.event.model.Event;
 import ru.practicum.ewm.event.repository.EventRepository;
-import ru.practicum.ewm.exception.NotPossibleCancelRequestException;
-import ru.practicum.ewm.exception.NotPossibleCreateRequestException;
+import ru.practicum.ewm.exception.RequestNotPossibleCancelException;
+import ru.practicum.ewm.exception.RequestNotPossibleCreateException;
 import ru.practicum.ewm.exception.not_found.EventNotFoundException;
 import ru.practicum.ewm.exception.not_found.RequestNotFoundException;
 import ru.practicum.ewm.request.enums.RequestStatus;
@@ -106,26 +106,26 @@ public class RequestServiceImpl implements RequestService {
 
     private void throwExceptionIfRequesterIsInitiator(User requester, Event event) {
         if (event.getInitiator().equals(requester)) {
-            throw new NotPossibleCreateRequestException("The initiator of the event cannot" +
+            throw new RequestNotPossibleCreateException("The initiator of the event cannot" +
                     " add a request to participate in his event");
         }
     }
 
     private void throwExceptionIfEventIsNotPublished(Event event) {
         if (event.getState() != EventState.PUBLISHED) {
-            throw new NotPossibleCreateRequestException("You cannot participate in an unpublished event");
+            throw new RequestNotPossibleCreateException("You cannot participate in an unpublished event");
         }
     }
 
     private void throwExceptionIfRequestLimitIsReached(Event event) {
         if (event.getConfirmedRequests().equals(event.getParticipantLimit())) {
-            throw new NotPossibleCreateRequestException("The limit of event participants has been reached");
+            throw new RequestNotPossibleCreateException("The limit of event participants has been reached");
         }
     }
 
     private void throwExceptionIfRequestStatusIsNotPending(ParticipationRequest request) {
         if (request.getStatus() != RequestStatus.PENDING) {
-            throw new NotPossibleCancelRequestException("Not possible update request because status is not pending");
+            throw new RequestNotPossibleCancelException("Not possible update request because status is not pending");
         }
     }
 

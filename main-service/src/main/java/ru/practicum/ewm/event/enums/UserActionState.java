@@ -1,6 +1,6 @@
 package ru.practicum.ewm.event.enums;
 
-import ru.practicum.ewm.exception.unsupported_enum.UnsupportedUserActionEnumValueException;
+import ru.practicum.ewm.exception.unsupported_enum_value.UnsupportedUserActionException;
 
 public enum UserActionState {
 
@@ -12,7 +12,7 @@ public enum UserActionState {
         try {
             return UserActionState.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new UnsupportedUserActionEnumValueException(name);
+            throw new UnsupportedUserActionException(name);
         }
     }
 

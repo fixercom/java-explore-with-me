@@ -1,6 +1,6 @@
 package ru.practicum.ewm.event.enums;
 
-import ru.practicum.ewm.exception.unsupported_enum.UnsupportedAdminActionEnumValueException;
+import ru.practicum.ewm.exception.unsupported_enum_value.UnsupportedAdminActionException;
 
 public enum AdminActionState {
 
@@ -12,7 +12,7 @@ public enum AdminActionState {
         try {
             return AdminActionState.valueOf(name.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new UnsupportedAdminActionEnumValueException(name);
+            throw new UnsupportedAdminActionException(name);
         }
     }
 }

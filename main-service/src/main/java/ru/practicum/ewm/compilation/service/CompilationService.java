@@ -16,4 +16,5 @@ public interface CompilationService {
     List<Compilation> searchCompilations(PublicCompilationFilter publicCompilationFilter);
 
     Compilation getCompilationById(Long id);
+
 }

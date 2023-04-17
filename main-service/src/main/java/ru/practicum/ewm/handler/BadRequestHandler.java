@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import ru.practicum.ewm.exception.unsupported_enum.*;
+import ru.practicum.ewm.exception.unsupported_enum_value.*;
 import ru.practicum.ewm.handler.error.ApiError;
 import ru.practicum.ewm.util.DateUtils;
 
@@ -53,8 +53,8 @@ public class BadRequestHandler {
                 .build();
     }
 
-    @ExceptionHandler({UnsupportedUserActionEnumValueException.class,
-            UnsupportedAdminActionEnumValueException.class,
+    @ExceptionHandler({UnsupportedUserActionException.class,
+            UnsupportedAdminActionException.class,
             UnsupportedRequestStatusException.class,
             UnsupportedEventSortTypeException.class})
     public ApiError handleUnsupportedUserActionStateException(UnsupportedEnumValueException exception) {
