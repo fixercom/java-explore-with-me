@@ -26,10 +26,16 @@ import ru.practicum.ewm.exception.EventNotPossibleCancelException;
 import ru.practicum.ewm.exception.EventNotPossibleChangeException;
 import ru.practicum.ewm.exception.EventNotPossiblePublishException;
 import ru.practicum.ewm.exception.not_found.EventNotFoundException;
+import ru.practicum.ewm.stats.client.StatsClient;
+import ru.practicum.ewm.stats.dto.ViewStats;
 import ru.practicum.ewm.util.DateUtils;
 import ru.practicum.ewm.util.QPredicates;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static ru.practicum.ewm.event.model.QEvent.event;
 
@@ -42,6 +48,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final EventUpdater eventUpdater;
+    private final StatsClient statsClient;
 
     @Override
     @Transactional
@@ -98,6 +105,7 @@ public class EventServiceImpl implements EventService {
         eventUpdater.update(eventPatch, targetEvent);
         throwExceptionIfDateIsIncorrect(targetEvent, true);
         changeEventStateIfNecessary(targetEvent, adminActionState);
+        setViewsForEvents(List.of(targetEvent));
         eventRepository.save(targetEvent);
         log.debug("Event with id={} updated in the database: {}", eventId, targetEvent);
         return targetEvent;
@@ -112,6 +120,7 @@ public class EventServiceImpl implements EventService {
                 .add(adminEventFilter.getDateRange(), dr -> generateDateRangeExpression(dr, false))
                 .buildAnd();
         List<Event> events = eventRepository.findAll(predicate, pageable).getContent();
+        setViewsForEvents(events);
         log.debug("Events was obtained from the database: {}", events);
         return events;
     }
@@ -135,13 +144,16 @@ public class EventServiceImpl implements EventService {
                 eventRepository.findAll(predicate, page).getContent() :
                 eventRepository.findAll(page).getContent();
         log.debug("Events was obtained from the database: {}", events);
-        return events;
+        setViewsForEvents(events);
+        return sortEventsByViewsIfNecessary(events, publicEventFilter);
     }
+
 
     @Override
     public Event getEventByIdPublic(Long id) {
         Event event = getEventById(id);
         throwExceptionIfEventNotPublished(event);
+        setViewsForEvents(List.of(event));
         return event;
     }
 
@@ -159,8 +171,7 @@ public class EventServiceImpl implements EventService {
         Pageable page;
         Sort sort;
         if (sortType != null) {
-            sort = (sortType == EventSortType.EVENT_DATE) ?
-                    Sort.by("eventDate") : Sort.by("state");
+            sort = Sort.by("eventDate");
             page = PageRequest.of(from / size, size, sort);
         } else {
             page = PageRequest.of(from / size, size);
@@ -230,6 +241,7 @@ public class EventServiceImpl implements EventService {
     private void changeEventState(Event event, AdminActionState adminActionState) {
         if (adminActionState == AdminActionState.PUBLISH_EVENT && event.getState() == EventState.PENDING) {
             event.setState(EventState.PUBLISHED);
+            event.setPublishedOn(DateUtils.now());
         } else if (adminActionState == AdminActionState.REJECT_EVENT && event.getState() != EventState.PUBLISHED) {
             event.setState(EventState.CANCELED);
         } else {
@@ -250,6 +262,40 @@ public class EventServiceImpl implements EventService {
 
     private BooleanExpression generateAvailableExpression(Boolean available) {
         return available ? event.confirmedRequests.lt(event.participantLimit) : null;
+    }
+
+    private void setViewsForEvents(List<Event> events) {
+        List<ViewStats> viewStatsList = getAllViewStatsByEventIdIn(events.stream().map(Event::getId));
+        Map<Long, ViewStats> viewStatsMap = new HashMap<>();
+        for (ViewStats viewStats : viewStatsList) {
+            viewStatsMap.put(getEventIdFromViewStats(viewStats), viewStats);
+        }
+        for (Event event : events) {
+            ViewStats currentViewStats = viewStatsMap.get(event.getId());
+            Long views = (currentViewStats != null) ? currentViewStats.getHits() : 0;
+            event.setViews(views);
+        }
+    }
+
+    private List<ViewStats> getAllViewStatsByEventIdIn(Stream<Long> eventIds) {
+        List<String> uris = eventIds
+                .map((eventId) -> String.format("/events/%s", eventId))
+                .collect(Collectors.toList());
+        return statsClient.getStats(DateUtils.START_TIME_FOR_STATS, DateUtils.END_TIME_FOR_STATS, uris, false);
+    }
+
+    private Long getEventIdFromViewStats(ViewStats viewStats) {
+        String uri = viewStats.getUri();
+        return Long.parseLong(uri.substring("/events/".length()));
+    }
+
+    private List<Event> sortEventsByViewsIfNecessary(List<Event> events, PublicEventFilter publicEventFilter) {
+        if (publicEventFilter.getEventSortType() == EventSortType.VIEWS) {
+            return events.stream()
+                    .sorted((e1, e2) -> Math.toIntExact(e2.getViews() - e1.getViews()))
+                    .collect(Collectors.toList());
+        }
+        return events;
     }
 
 }

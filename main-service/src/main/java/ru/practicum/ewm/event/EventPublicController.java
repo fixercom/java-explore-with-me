@@ -10,6 +10,7 @@ import ru.practicum.ewm.event.dto.PublicEventFilter;
 import ru.practicum.ewm.event.enums.EventSortType;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.service.EventService;
+import ru.practicum.ewm.stats.client.StatsClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
@@ -25,6 +26,7 @@ public class EventPublicController {
 
     private final EventService eventService;
     private final EventMapper eventMapper;
+    private final StatsClient statsClient;
 
     @GetMapping
     public List<EventShortDto> searchEvents(@RequestParam(required = false) String text,
@@ -53,12 +55,16 @@ public class EventPublicController {
                 .from(from)
                 .size(size)
                 .build();
+        request.setAttribute("app_name","main application");
+        statsClient.createHit(request);
         return eventMapper.toEventShortDtoList(eventService.searchEvents(publicEventFilter));
     }
 
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
         log.debug("{} request {} received", request.getMethod(), request.getRequestURI());
+        request.setAttribute("app_name","main application");
+        statsClient.createHit(request);
         return eventMapper.toEventFullDto(eventService.getEventByIdPublic(id));
     }
 

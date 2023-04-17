@@ -59,4 +59,9 @@ public class Event {
     private EventState state;
     @Column(name = "date_created", nullable = false)
     private LocalDateTime createdOn;
+    @Column
+    private LocalDateTime publishedOn;
+    @Transient
+    private Long views;
+
 }

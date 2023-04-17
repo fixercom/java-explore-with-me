@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS events
     state              VARCHAR(10)                             NOT NULL,
     initiator_id       BIGINT                                  NOT NULL,
     date_created       TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
+    published_on       TIMESTAMP WITHOUT TIME ZONE,
 
     CONSTRAINT pk_events PRIMARY KEY (id),
     CONSTRAINT uc_events_annotation UNIQUE (annotation),

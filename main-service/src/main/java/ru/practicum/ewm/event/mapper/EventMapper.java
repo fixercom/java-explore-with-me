@@ -16,7 +16,10 @@ public interface EventMapper {
     @Mapping(target = "createdOn", ignore = true)
     @Mapping(target = "state", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "publishedOn", ignore = true)
     Event toEvent(NewEventDto newEventDto);
+
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "state", ignore = true)
@@ -24,6 +27,8 @@ public interface EventMapper {
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
+    @Mapping(target = "views", ignore = true)
+    @Mapping(target = "publishedOn", ignore = true)
     Event toEvent(UpdateEventUserRequest updateEventUserRequest);
 
     @Mapping(target = "id", ignore = true)
@@ -32,13 +37,12 @@ public interface EventMapper {
     @Mapping(target = "initiator", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "confirmedRequests", ignore = true)
-    Event toEvent(UpdateEventAdminRequest updateEventAdminRequest);
-
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
+    Event toEvent(UpdateEventAdminRequest updateEventAdminRequest);
+
     EventFullDto toEventFullDto(Event event);
 
-    @Mapping(target = "views", ignore = true)
     EventShortDto toEventShortDto(Event event);
 
     List<EventShortDto> toEventShortDtoList(List<Event> events);
