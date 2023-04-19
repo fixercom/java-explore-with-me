@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PublicCompilationFilter {
 
-    Boolean pinned;
-    Integer from;
-    Integer size;
+    private Boolean pinned;
+    private Integer from;
+    private Integer size;
 
 }

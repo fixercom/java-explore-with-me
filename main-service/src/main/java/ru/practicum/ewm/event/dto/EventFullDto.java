@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.user.dto.UserShortDro;
+import ru.practicum.ewm.util.DateUtils;
 
 import java.time.LocalDateTime;
 
@@ -20,17 +21,17 @@ public class EventFullDto {
     private String annotation;
     private CategoryDto category;
     private Long confirmedRequests;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime createdOn;
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
     private Long id;
     private UserShortDro initiator;
     private Location location;
     private Boolean paid;
     private Integer participantLimit;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
     private EventState state;

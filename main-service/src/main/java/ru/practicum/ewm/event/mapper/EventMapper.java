@@ -18,6 +18,8 @@ public interface EventMapper {
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
+    @Mapping(target = "locationLatitude", source = "location.lat")
+    @Mapping(target = "locationLongitude", source = "location.lon")
     Event toEvent(NewEventDto newEventDto);
 
 
@@ -29,6 +31,8 @@ public interface EventMapper {
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
+    @Mapping(target = "locationLatitude", source = "location.lat")
+    @Mapping(target = "locationLongitude", source = "location.lon")
     Event toEvent(UpdateEventUserRequest updateEventUserRequest);
 
     @Mapping(target = "id", ignore = true)
@@ -39,11 +43,13 @@ public interface EventMapper {
     @Mapping(target = "confirmedRequests", ignore = true)
     @Mapping(target = "views", ignore = true)
     @Mapping(target = "publishedOn", ignore = true)
+    @Mapping(target = "locationLatitude", source = "location.lat")
+    @Mapping(target = "locationLongitude", source = "location.lon")
     Event toEvent(UpdateEventAdminRequest updateEventAdminRequest);
 
+    @Mapping(target = "location",
+            expression = "java(new Location(event.getLocationLatitude(), event.getLocationLongitude()))")
     EventFullDto toEventFullDto(Event event);
-
-    EventShortDto toEventShortDto(Event event);
 
     List<EventShortDto> toEventShortDtoList(List<Event> events);
 

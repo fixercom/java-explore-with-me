@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.util.DateUtils;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class UpdateEventAdminRequest {
     private Long category;
     @Size(min = 20, max = 7000)
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
     private Location location;
     private Boolean paid;

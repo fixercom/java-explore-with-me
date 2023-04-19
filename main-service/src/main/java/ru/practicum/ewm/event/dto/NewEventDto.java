@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.util.DateUtils;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,7 +26,7 @@ public class NewEventDto {
     @Size(min = 20, max = 7000)
     @NotBlank(message = "description must not be blank")
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
     @NotNull(message = "location must not be null")
     private Location location;

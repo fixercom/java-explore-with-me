@@ -4,7 +4,6 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.ewm.category.model.Category;
-import ru.practicum.ewm.event.dto.Location;
 import ru.practicum.ewm.event.enums.EventState;
 import ru.practicum.ewm.user.model.User;
 
@@ -34,12 +33,10 @@ public class Event {
     private String description;
     @Column(nullable = false)
     private LocalDateTime eventDate;
-    @Embedded
-    @AttributeOverrides(value = {
-            @AttributeOverride(name = "lat", column = @Column(name = "location_latitude", nullable = false)),
-            @AttributeOverride(name = "lon", column = @Column(name = "location_longitude", nullable = false))
-    })
-    private Location location;
+    @Column(nullable = false)
+    private Float locationLatitude;
+    @Column(nullable = false)
+    private Float locationLongitude;
     @Column(nullable = false)
     private Boolean paid;
     @Column(nullable = false)

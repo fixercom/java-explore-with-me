@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.util.DateUtils;
 import ru.practicum.ewm.validation.annotation.AtLeastTwoHoursAfterCurrentTime;
 
 import javax.validation.constraints.Size;
@@ -21,7 +22,7 @@ public class UpdateEventUserRequest {
     private Long category;
     @Size(min = 20, max = 7000)
     private String description;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     @AtLeastTwoHoursAfterCurrentTime(message = "the date cannot be earlier than two hours from the current moment")
     private LocalDateTime eventDate;
     private Location location;

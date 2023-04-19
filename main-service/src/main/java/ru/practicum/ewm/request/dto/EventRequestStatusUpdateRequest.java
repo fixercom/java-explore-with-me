@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EventRequestStatusUpdateRequest {
 
-    List<Long> requestIds;
-    RequestStatus status;
+    private List<Long> requestIds;
+    private RequestStatus status;
 
 }
