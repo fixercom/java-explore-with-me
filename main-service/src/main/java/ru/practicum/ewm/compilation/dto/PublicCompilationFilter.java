@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats.dto;
+package ru.practicum.ewm.compilation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewStats {
+public class PublicCompilationFilter {
 
-    private String app;
-    private String uri;
-    private Long hits;
+    private Boolean pinned;
+    private Integer from;
+    private Integer size;
 
 }

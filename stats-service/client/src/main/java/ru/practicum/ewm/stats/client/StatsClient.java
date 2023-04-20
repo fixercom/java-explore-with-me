@@ -3,12 +3,16 @@ package ru.practicum.ewm.stats.client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.practicum.ewm.stats.dto.EndpointHit;
+import ru.practicum.ewm.stats.dto.ViewStats;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -38,7 +42,7 @@ public class StatsClient {
         restTemplate.postForEntity(statsServerUrl + "/hit", endpointHit, Void.class);
     }
 
-    public Object[] getStats(String start, String end, List<String> uris, Boolean unique) {
+    public List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique) {
         UriComponents url = UriComponentsBuilder
                 .fromUriString(statsServerUrl + "/stats")
                 .queryParam("start", start)
@@ -46,7 +50,10 @@ public class StatsClient {
                 .queryParam("uris", uris)
                 .queryParam("unique", unique)
                 .build();
-        return restTemplate.getForObject(url.toUriString(), Object[].class);
+        ResponseEntity<List<ViewStats>> response = restTemplate.exchange(url.toUriString(), HttpMethod.GET,
+                null, new ParameterizedTypeReference<>() {
+                });
+        return response.getBody();
     }
 
 }

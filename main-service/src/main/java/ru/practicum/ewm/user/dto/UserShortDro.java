@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats.dto;
+package ru.practicum.ewm.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewStats {
+public class UserShortDro {
 
-    private String app;
-    private String uri;
-    private Long hits;
+    private Long id;
+    private String name;
 
 }

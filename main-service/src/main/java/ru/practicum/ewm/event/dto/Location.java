@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats.dto;
+package ru.practicum.ewm.event.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ViewStats {
+public class Location {
 
-    private String app;
-    private String uri;
-    private Long hits;
+    private Float lat;
+    private Float lon;
 
 }
