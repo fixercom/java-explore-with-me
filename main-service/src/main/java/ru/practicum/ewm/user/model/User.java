@@ -21,5 +21,7 @@ public class User {
     private String email;
     @Column(length = 50, nullable = false)
     private String name;
+    @Column(nullable = false)
+    private Integer rate;
 
 }

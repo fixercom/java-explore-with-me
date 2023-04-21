@@ -57,6 +57,9 @@ public class EventServiceImpl implements EventService {
         event.setState(EventState.PENDING);
         event.setCreatedOn(DateUtils.now());
         event.setConfirmedRequests(0);
+        event.setRate(0);
+        event.setLikes(0);
+        event.setDislikes(0);
         eventRepository.save(event);
         log.debug("Event saved in the database, generated id={}", event.getId());
         return event;
@@ -112,14 +115,16 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> searchEvents(AdminEventFilter adminEventFilter, Pageable pageable) {
+    public List<Event> searchEvents(AdminEventFilter adminEventFilter, Pageable page) {
         Predicate predicate = QPredicates.builder()
                 .add(adminEventFilter.getUsers(), event.initiator.id::in)
                 .add(adminEventFilter.getStates(), event.state::in)
                 .add(adminEventFilter.getCategories(), event.category.id::in)
                 .add(adminEventFilter.getDateRange(), dr -> generateDateRangeExpression(dr, false))
                 .buildAnd();
-        List<Event> events = eventRepository.findAll(predicate, pageable).getContent();
+        List<Event> events = (predicate != null) ?
+                eventRepository.findAll(predicate, page).getContent() :
+                eventRepository.findAll(page).getContent();
         setViewsForEvents(events);
         log.debug("Events was obtained from the database: {}", events);
         return events;
@@ -164,19 +169,36 @@ public class EventServiceImpl implements EventService {
         return events;
     }
 
+    @Override
+    public List<Event> getTopEvents(Integer limit) {
+        Pageable page = PageRequest.of(0, limit, Sort.by("rate").descending());
+        List<Event> events = eventRepository.findAll(page).getContent();
+        log.debug("Event top with limit={} was obtained from the database", limit);
+        return events;
+    }
+
     private Pageable getPageFromPublicEventFilter(PublicEventFilter publicEventFilter) {
         Integer from = publicEventFilter.getFrom();
         Integer size = publicEventFilter.getSize();
         EventSortType sortType = publicEventFilter.getEventSortType();
         Pageable page;
         Sort sort;
-        if (sortType != null) {
-            sort = Sort.by("eventDate");
+        if (sortType != null && sortType != EventSortType.VIEWS) {
+            sort = resolveSortType(sortType);
             page = PageRequest.of(from / size, size, sort);
         } else {
             page = PageRequest.of(from / size, size);
         }
         return page;
+    }
+
+    private Sort resolveSortType(EventSortType sortType) {
+        if (sortType == EventSortType.EVENT_DATE) {
+            return Sort.by("eventDate");
+        } else if (sortType == EventSortType.RATE) {
+            return Sort.by("rate").descending();
+        }
+        return Sort.by("publishedOn").descending();
     }
 
     private void throwEventNotPossibleCancelOrPublishException(Event event, AdminActionState adminActionState) {

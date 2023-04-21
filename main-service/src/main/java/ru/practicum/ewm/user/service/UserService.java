@@ -16,4 +16,6 @@ public interface UserService {
 
     void throwExceptionIfUserDoesNotExist(Long id);
 
+    List<User> getTopUsers(Integer limit);
+
 }

@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.exception.not_found.UserNotFoundException;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.repository.UserRepository;
 import ru.practicum.ewm.user.service.UserService;
-
 
 import java.util.List;
 
@@ -25,9 +25,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User createUser(User user) {
-        User savedUser = userRepository.save(user);
-        log.debug("User saved in the database, generated id={}", savedUser.getId());
-        return savedUser;
+        user.setRate(0);
+        userRepository.save(user);
+        log.debug("User saved in the database, generated id={}", user.getId());
+        return user;
     }
 
     @Override
@@ -63,6 +64,14 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException(id);
         }
+    }
+
+    @Override
+    public List<User> getTopUsers(Integer limit) {
+        Pageable page = PageRequest.of(0, limit, Sort.by("rate").descending());
+        List<User> users = userRepository.findAll(page).getContent();
+        log.debug("User top with limit={} was obtained from the database", limit);
+        return users;
     }
 
 }

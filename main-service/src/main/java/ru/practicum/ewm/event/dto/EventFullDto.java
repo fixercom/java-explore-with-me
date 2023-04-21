@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.event.enums.EventState;
-import ru.practicum.ewm.user.dto.UserShortDro;
+import ru.practicum.ewm.user.dto.UserShortDto;
 import ru.practicum.ewm.util.DateUtils;
 
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ public class EventFullDto {
     @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
     private Long id;
-    private UserShortDro initiator;
+    private UserShortDto initiator;
     private Location location;
     private Boolean paid;
     private Integer participantLimit;

@@ -60,5 +60,11 @@ public class Event {
     private LocalDateTime publishedOn;
     @Transient
     private Long views;
+    @Column(nullable = false)
+    private Integer rate;
+    @Column(nullable = false)
+    private Integer likes;
+    @Column(nullable = false)
+    private Integer dislikes;
 
 }

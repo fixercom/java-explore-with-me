@@ -1,4 +1,4 @@
-package ru.practicum.ewm.user.dto;
+package ru.practicum.ewm.vote.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserShortDro {
+public class UserVoteDto {
 
     private Long id;
-    private String name;
+    private Long userId;
+    private Long eventId;
+    private Boolean isPositive;
 
 }
