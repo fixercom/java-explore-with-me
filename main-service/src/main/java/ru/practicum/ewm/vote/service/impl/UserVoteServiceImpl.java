@@ -28,14 +28,23 @@ public class UserVoteServiceImpl implements UserVoteService {
 
     @Override
     @Transactional
-    public void deleteUserVoteForEvent(Long userId, Long eventId, Boolean isPositive) {
+    public void deleteUserVoteForEvent(User user, Event event, Boolean isPositive) {
+        Long userId = user.getId();
+        Long eventId = event.getId();
         if (userVoteRepository.existsByUserIdAndEventIdAndIsPositive(userId, eventId, isPositive)) {
             userVoteRepository.deleteByUserIdAndEventIdAndIsPositive(userId, eventId, isPositive);
             if (isPositive) {
+                event.setRate(event.getRate() - 1);
+                event.setLikes(event.getLikes() - 1);
+                event.getInitiator().setRate(event.getInitiator().getRate() - 1);
                 log.debug("The like for the event with id={} was deleted by user with id={}", eventId, userId);
             } else {
+                event.setRate(event.getRate() + 1);
+                event.setDislikes(event.getDislikes() - 1);
+                event.getInitiator().setRate(event.getInitiator().getRate() + 1);
                 log.debug("The dislike for the event with id={} was deleted by user with id={}", eventId, userId);
             }
+            eventRepository.save(event);
         }
     }
 
@@ -44,7 +53,7 @@ public class UserVoteServiceImpl implements UserVoteService {
         Long eventId = event.getId();
         UserVote userVote = new UserVote(null, userId, eventId, true);
         userVoteRepository.save(userVote);
-        deleteDislikeIfExist(userId, eventId);
+        deleteDislikeIfExist(user, event);
         event.setRate(event.getRate() + 1);
         event.setLikes(event.getLikes() + 1);
         event.getInitiator().setRate(event.getInitiator().getRate() + 1);
@@ -58,7 +67,7 @@ public class UserVoteServiceImpl implements UserVoteService {
         Long eventId = event.getId();
         UserVote userVote = new UserVote(null, userId, eventId, false);
         userVoteRepository.save(userVote);
-        deleteLikeIfExist(userId, eventId);
+        deleteLikeIfExist(user, event);
         event.setRate(event.getRate() - 1);
         event.setDislikes(event.getDislikes() + 1);
         event.getInitiator().setRate(event.getInitiator().getRate() - 1);
@@ -67,12 +76,12 @@ public class UserVoteServiceImpl implements UserVoteService {
         return userVote;
     }
 
-    private void deleteLikeIfExist(Long userId, Long eventId) {
-        deleteUserVoteForEvent(userId, eventId, true);
+    private void deleteLikeIfExist(User user, Event event) {
+        deleteUserVoteForEvent(user, event, true);
     }
 
-    private void deleteDislikeIfExist(Long userId, Long eventId) {
-        deleteUserVoteForEvent(userId, eventId, false);
+    private void deleteDislikeIfExist(User user, Event event) {
+        deleteUserVoteForEvent(user, event, false);
     }
 
 }

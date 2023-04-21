@@ -8,5 +8,6 @@ public interface UserVoteService {
 
     UserVote addUserVoteForEvent(User user, Event event, Boolean isPositive);
 
-    void deleteUserVoteForEvent(Long userId, Long eventId, Boolean isPositive);
+    void deleteUserVoteForEvent(User user, Event event, Boolean isPositive);
+
 }
