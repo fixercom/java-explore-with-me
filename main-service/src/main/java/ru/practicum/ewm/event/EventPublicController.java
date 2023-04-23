@@ -2,17 +2,17 @@ package ru.practicum.ewm.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.event.dto.DateRange;
-import ru.practicum.ewm.event.dto.EventFullDto;
-import ru.practicum.ewm.event.dto.EventShortDto;
-import ru.practicum.ewm.event.dto.PublicEventFilter;
+import ru.practicum.ewm.event.dto.*;
 import ru.practicum.ewm.event.enums.EventSortType;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.stats.client.StatsClient;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -22,6 +22,7 @@ import java.util.List;
 @RequestMapping("/events")
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 public class EventPublicController {
 
     private final EventService eventService;
@@ -55,7 +56,7 @@ public class EventPublicController {
                 .from(from)
                 .size(size)
                 .build();
-        request.setAttribute("app_name","main application");
+        request.setAttribute("app_name", "main application");
         statsClient.createHit(request);
         return eventMapper.toEventShortDtoList(eventService.searchEvents(publicEventFilter));
     }
@@ -63,9 +64,21 @@ public class EventPublicController {
     @GetMapping("/{id}")
     public EventFullDto getEventById(@PathVariable Long id, HttpServletRequest request) {
         log.debug("{} request {} received", request.getMethod(), request.getRequestURI());
-        request.setAttribute("app_name","main application");
+        request.setAttribute("app_name", "main application");
         statsClient.createHit(request);
         return eventMapper.toEventFullDto(eventService.getEventByIdPublic(id));
+    }
+
+    @GetMapping("/top")
+    public List<EventTop> getTopEvents(@RequestParam(defaultValue = "10") @Min(1) @Max(100) Integer limit,
+                                       HttpServletRequest request) {
+        String params = request.getQueryString();
+        if (params != null) {
+            log.debug("{} request {}?{} received", request.getMethod(), request.getRequestURI(), params);
+        } else {
+            log.debug("{} request {} received", request.getMethod(), request.getRequestURI());
+        }
+        return eventMapper.toEventTopList(eventService.getTopEvents(limit));
     }
 
 }

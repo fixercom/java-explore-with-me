@@ -2,9 +2,10 @@ package ru.practicum.ewm.event.enums;
 
 import ru.practicum.ewm.exception.unsupported_enum_value.UnsupportedEventSortTypeException;
 
-public enum EventSortType   {
+public enum EventSortType {
 
     EVENT_DATE,
+    RATE,
     VIEWS;
 
     public static EventSortType fromName(String name) {

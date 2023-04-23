@@ -12,6 +12,7 @@ import ru.practicum.ewm.handler.error.ApiError;
 import ru.practicum.ewm.util.DateUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 
 @RestControllerAdvice
@@ -58,6 +59,20 @@ public class BadRequestHandler {
             UnsupportedRequestStatusException.class,
             UnsupportedEventSortTypeException.class})
     public ApiError handleUnsupportedUserActionStateException(UnsupportedEnumValueException exception) {
+        String message = exception.getMessage();
+        log.warn("{}: {}", exception.getClass().getSimpleName(), message);
+        return ApiError.builder()
+                .status(RESPONSE_STATUS_NAME)
+                .reason(REASON)
+                .message(message)
+                .timestamp(DateUtils.now())
+                .build();
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ApiError handleConstraintViolationException(ConstraintViolationException exception,
+                                                       HttpServletRequest request) {
+        log.debug("{} request {} received", request.getMethod(), request.getRequestURI());
         String message = exception.getMessage();
         log.warn("{}: {}", exception.getClass().getSimpleName(), message);
         return ApiError.builder()

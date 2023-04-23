@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.category.dto.CategoryDto;
-import ru.practicum.ewm.user.dto.UserShortDro;
+import ru.practicum.ewm.user.dto.UserShortDto;
 import ru.practicum.ewm.util.DateUtils;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class EventShortDto {
     @JsonFormat(pattern = DateUtils.DATE_TIME_FORMAT)
     private LocalDateTime eventDate;
     private Long id;
-    private UserShortDro initiator;
+    private UserShortDto initiator;
     private Boolean paid;
     private String title;
     private Integer views;

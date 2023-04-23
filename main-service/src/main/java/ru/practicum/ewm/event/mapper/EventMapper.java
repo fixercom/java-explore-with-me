@@ -20,6 +20,9 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "locationLatitude", source = "location.lat")
     @Mapping(target = "locationLongitude", source = "location.lon")
+    @Mapping(target = "rate", ignore = true)
+    @Mapping(target = "likes", ignore = true)
+    @Mapping(target = "dislikes", ignore = true)
     Event toEvent(NewEventDto newEventDto);
 
 
@@ -33,6 +36,9 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "locationLatitude", source = "location.lat")
     @Mapping(target = "locationLongitude", source = "location.lon")
+    @Mapping(target = "rate", ignore = true)
+    @Mapping(target = "likes", ignore = true)
+    @Mapping(target = "dislikes", ignore = true)
     Event toEvent(UpdateEventUserRequest updateEventUserRequest);
 
     @Mapping(target = "id", ignore = true)
@@ -45,6 +51,9 @@ public interface EventMapper {
     @Mapping(target = "publishedOn", ignore = true)
     @Mapping(target = "locationLatitude", source = "location.lat")
     @Mapping(target = "locationLongitude", source = "location.lon")
+    @Mapping(target = "rate", ignore = true)
+    @Mapping(target = "likes", ignore = true)
+    @Mapping(target = "dislikes", ignore = true)
     Event toEvent(UpdateEventAdminRequest updateEventAdminRequest);
 
     @Mapping(target = "location",
@@ -54,5 +63,7 @@ public interface EventMapper {
     List<EventShortDto> toEventShortDtoList(List<Event> events);
 
     List<EventFullDto> toEventFullDtoList(List<Event> events);
+
+    List<EventTop> toEventTopList(List<Event> events);
 
 }

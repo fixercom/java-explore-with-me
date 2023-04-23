@@ -31,4 +31,6 @@ public interface EventService {
 
     List<Event> getAllEventsByIdIn(List<Long> eventIds);
 
+    List<Event> getTopEvents(Integer limit);
+
 }

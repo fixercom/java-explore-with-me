@@ -1,0 +1,1421 @@
+{
+	"info": {
+		"_postman_id": "6f8b239e-b109-4d85-8e59-035302fc4119",
+		"name": "feature",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23592602"
+	},
+	"item": [
+		{
+			"name": "likes",
+			"item": [
+				{
+					"name": "Add like when user does not exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 404 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(404)",
+									"});",
+									"",
+									"pm.test(\"Test response body\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status, '\"status\" field').to.eql('NOT_FOUND');",
+									"    pm.expect(jsonData.reason, '\"reason\" field').to.eql('The required object was not found.');",
+									"    pm.expect(jsonData.message, '\"message\" field').to.eql('User with id=999 was not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/999/likes/events/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"999",
+								"likes",
+								"events",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.email, '\"email\" field').to.eql('alexander@abc.ru');",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('Alexander');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Alexander\",\n    \"email\": \"alexander@abc.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.email, '\"email\" field').to.eql('alexey@abc.ru');",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('Alexey');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Alexey\",\n    \"email\": \"alexey@abc.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.email, '\"email\" field').to.eql('john@abc.ru');",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('John');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John\",\n    \"email\": \"john@abc.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.email, '\"email\" field').to.eql('ivan@abc.ru');",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('Ivan');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Ivan\",\n    \"email\": \"ivan@abc.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create user 5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create user\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.email, '\"email\" field').to.eql('sergey@abc.ru');",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('Sergey');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Sergey\",\n    \"email\": \"sergey@abc.ru\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add like when event does not exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 404 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(404)",
+									"});",
+									"",
+									"pm.test(\"Test response body\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status, '\"status\" field').to.eql('NOT_FOUND');",
+									"    pm.expect(jsonData.reason, '\"reason\" field').to.eql('The required object was not found.');",
+									"    pm.expect(jsonData.message, '\"message\" field').to.eql('Event with id=999 was not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/likes/events/999",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"likes",
+								"events",
+								"999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create category\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.name, '\"name\" field').to.eql('Main category');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Main category\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create event 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create event\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('annotation for event 1');",
+									"    pm.expect(jsonData.category.id, '\"category.id\" field').to.eql(1);",
+									"    pm.expect(jsonData.description, '\"description\" field').to.eql('description for event 1');",
+									"    pm.expect(jsonData.location.lat, '\"location.lat\" field').to.eql(37.484753);",
+									"    pm.expect(jsonData.location.lon, '\"location.lon\" field').to.eql(63.11171);",
+									"    pm.expect(jsonData.title, '\"title\" field').to.eql('event 1');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"annotation\": \"annotation for event 1\",\n    \"category\": 1,\n    \"description\": \"description for event 1\",\n    \"eventDate\": \"2024-01-01 12:00:00\",\n    \"location\": {\n        \"lat\": 37.484754,\n        \"lon\": 63.111711\n    },\n    \"title\": \"event 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/1/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create event\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('annotation for event 2');",
+									"    pm.expect(jsonData.category.id, '\"category.id\" field').to.eql(1);",
+									"    pm.expect(jsonData.description, '\"description\" field').to.eql('description for event 2');",
+									"    pm.expect(jsonData.location.lat, '\"location.lat\" field').to.eql(57.477413);",
+									"    pm.expect(jsonData.location.lon, '\"location.lon\" field').to.eql(32.18189);",
+									"    pm.expect(jsonData.title, '\"title\" field').to.eql('event 2');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"annotation\": \"annotation for event 2\",\n    \"category\": 1,\n    \"description\": \"description for event 2\",\n    \"eventDate\": \"2024-01-02 12:00:00\",\n    \"location\": {\n        \"lat\": 57.477415,\n        \"lon\": 32.181888\n    },\n    \"title\": \"event 2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/2/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create event 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create event\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('annotation for event 3');",
+									"    pm.expect(jsonData.category.id, '\"category.id\" field').to.eql(1);",
+									"    pm.expect(jsonData.description, '\"description\" field').to.eql('description for event 3');",
+									"    pm.expect(jsonData.location.lat, '\"location.lat\" field').to.eql(14.454577);",
+									"    pm.expect(jsonData.location.lon, '\"location.lon\" field').to.eql(44.484417);",
+									"    pm.expect(jsonData.title, '\"title\" field').to.eql('event 3');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"annotation\": \"annotation for event 3\",\n    \"category\": 1,\n    \"description\": \"description for event 3\",\n    \"eventDate\": \"2024-01-03 12:00:00\",\n    \"location\": {\n        \"lat\": 14.454577,\n        \"lon\": 44.484417\n    },\n    \"title\": \"event 3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/3/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"3",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create event 4",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create event\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('annotation for event 4');",
+									"    pm.expect(jsonData.category.id, '\"category.id\" field').to.eql(1);",
+									"    pm.expect(jsonData.description, '\"description\" field').to.eql('description for event 4');",
+									"    pm.expect(jsonData.location.lat, '\"location.lat\" field').to.eql(57.986324);",
+									"    pm.expect(jsonData.location.lon, '\"location.lon\" field').to.eql(66.78942);",
+									"    pm.expect(jsonData.title, '\"title\" field').to.eql('event 4');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"annotation\": \"annotation for event 4\",\n    \"category\": 1,\n    \"description\": \"description for event 4\",\n    \"eventDate\": \"2024-01-04 12:00:00\",\n    \"location\": {\n        \"lat\": 57.986324,\n        \"lon\": 66.78942\n    },\n    \"title\": \"event 4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/4/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"4",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create event 5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create event\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.annotation, '\"annotation\" field').to.eql('annotation for event 5');",
+									"    pm.expect(jsonData.category.id, '\"category.id\" field').to.eql(1);",
+									"    pm.expect(jsonData.description, '\"description\" field').to.eql('description for event 5');",
+									"    pm.expect(jsonData.location.lat, '\"location.lat\" field').to.eql(33.36871);",
+									"    pm.expect(jsonData.location.lon, '\"location.lon\" field').to.eql(35.13131);",
+									"    pm.expect(jsonData.title, '\"title\" field').to.eql('event 5');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"annotation\": \"annotation for event 5\",\n    \"category\": 1,\n    \"description\": \"description for event 5\",\n    \"eventDate\": \"2024-01-05 12:00:00\",\n    \"location\": {\n        \"lat\": 33.36871,\n        \"lon\": 35.13131\n    },\n    \"title\": \"event 5\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/5/events",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"5",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 1 add like to event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(1);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/likes/events/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"likes",
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 1 add like to event 2 when like is already exist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(409)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status, '\"status\" field').to.eql('CONFLICT');",
+									"    pm.expect(jsonData.reason, '\"reason\" field').to.eql('Integrity constraint has been violated.');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/likes/events/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"likes",
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 3 add like to event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(3);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/3/likes/events/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"3",
+								"likes",
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 4 add like to event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(4);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/4/likes/events/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"4",
+								"likes",
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 2 add like to event 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(2);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(3);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/2/likes/events/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"2",
+								"likes",
+								"events",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 5 add like to event 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(5);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(3);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/5/likes/events/3",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"5",
+								"likes",
+								"events",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 1 add like to event 5",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create like\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(1);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(5);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/likes/events/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"likes",
+								"events",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top events",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].id, '\"id\" field of the first event').to.eql(2);",
+									"    pm.expect(jsonData[0].rate, '\"rate\" field of the first event').to.eql(3);",
+									"    pm.expect(jsonData[0].likes, '\"likes\" field of the first event').to.eql(3);",
+									"    pm.expect(jsonData[1].id, '\"id\" field of the second event').to.eql(3);",
+									"    pm.expect(jsonData[1].rate, '\"rate\" field of the second event').to.eql(2);",
+									"    pm.expect(jsonData[1].likes, '\"likes\" field of the second event').to.eql(2);",
+									"    pm.expect(jsonData[2].id, '\"id\" field of the third event').to.eql(5);",
+									"    pm.expect(jsonData[2].rate, '\"rate\" field of the third event').to.eql(1);",
+									"    pm.expect(jsonData[2].likes, '\"likes\" field of the third event').to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/top",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"top"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top events  with limit 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length, 'Top events must contain only two events').to.eql(2)",
+									"     pm.expect(jsonData[0].id, '\"id\" field of the first event').to.eql(2);",
+									"    pm.expect(jsonData[0].rate, '\"rate\" field of the first event').to.eql(3);",
+									"    pm.expect(jsonData[0].likes, '\"likes\" field of the first event').to.eql(3);",
+									"    pm.expect(jsonData[1].id, '\"id\" field of the second event').to.eql(3);",
+									"    pm.expect(jsonData[1].rate, '\"rate\" field of the second event').to.eql(2);",
+									"    pm.expect(jsonData[1].likes, '\"likes\" field of the second event').to.eql(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/top?limit=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"top"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].rate, '\"rate\" field of the first user').to.eql(3);",
+									"    pm.expect(jsonData[1].rate, '\"rate\" field of the second user').to.eql(2);",
+									"    pm.expect(jsonData[2].rate, '\"rate\" field of the third user').to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/top",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"top"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top users with limit 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.length, 'Top users must contain only two users').to.eql(2)",
+									"    pm.expect(jsonData[0].rate, '\"rate\" field of the first user').to.eql(3);",
+									"    pm.expect(jsonData[1].rate, '\"rate\" field of the second user').to.eql(2);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/top?limit=2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"top"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search events with sort by rate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].id, '\"id\" field of the first event').to.eql(2);",
+									"    pm.expect(jsonData[1].id, '\"id\" field of the second event').to.eql(3);",
+									"    pm.expect(jsonData[2].id, '\"id\" field of the third event').to.eql(5); ",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events?sort=RATE",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "RATE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 4 add dislike to event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create dislike\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(4);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/4/likes/events/2?isPositive=false",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"4",
+								"likes",
+								"events",
+								"2"
+							],
+							"query": [
+								{
+									"key": "isPositive",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 5 add dislike to event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 201 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(201)",
+									"});",
+									"",
+									"pm.test(\"Test create dislike\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.id, '\"id\" field').to.not.eql(null);",
+									"    pm.expect(jsonData.userId, '\"userId\" field').to.eql(5);",
+									"    pm.expect(jsonData.eventId, '\"eventId\" field').to.eql(2);",
+									"    pm.expect(jsonData.isPositive, '\"isPositive\" field').to.eql(false);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/5/likes/events/2?isPositive=false",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"5",
+								"likes",
+								"events",
+								"2"
+							],
+							"query": [
+								{
+									"key": "isPositive",
+									"value": "false"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User 1 delete like from event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 204 status code\", function() {",
+									"    pm.expect(pm.response.code).to.eql(204)",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1/likes/events/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"likes",
+								"events",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get top events after dislike and delete like from event 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"The response must contain the 200 status code and data in json format\", function() {",
+									"    pm.response.to.be.withBody;",
+									"    pm.response.to.be.json;",
+									"    pm.expect(pm.response.code).to.eql(200)",
+									"});",
+									"",
+									"pm.test(\"Test get top events\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData[0].id, '\"id\" field of the first event').to.eql(3);",
+									"    pm.expect(jsonData[0].rate, '\"rate\" field of the first event').to.eql(2);",
+									"    pm.expect(jsonData[0].likes, '\"likes\" field of the first event').to.eql(2);",
+									"    pm.expect(jsonData[1].id, '\"id\" field of the second event').to.eql(5);",
+									"    pm.expect(jsonData[1].rate, '\"rate\" field of the second event').to.eql(1);",
+									"    pm.expect(jsonData[1].likes, '\"likes\" field of the second event').to.eql(1);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/events/top",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"events",
+								"top"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
